@@ -1,18 +1,14 @@
-# Tasks - CRUD Operations for Library Management System
-
-Below is a comprehensive set of CRUD endpoints for managing books, users, reviews, and categories in a library system using a RESTful API approach. Each task details the corresponding HTTP methods (Create, Read, Update, Delete) along with example JSON requests and responses.
-
----
+# 
+# Library Management System - CRUD API Documentation
 
 ## Books API (CRUD Operations)
 
----
+### 1. Create (Add a New Book)
+**Request**  
+`POST /books`  
 
-### 1. **Create** (Add a New Book)
-
-#### Request
+**Request Body**  
 ```json
-POST /books
 {
   "title": "The Great Gatsby",
   "author": "F. Scott Fitzgerald",
@@ -23,81 +19,82 @@ POST /books
 }
 ```
 
-#### Response
+**Response**  
+`201 Created`  
 ```json
 {
-  "status": "success",
-  "message": "Book added successfully",
-  "id": "6769be7156ca61f944fa3f90"
+  "id": "6769be7156ca61f944fa3f90",
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "isbn": "1234567890123",
+  "publisher": "Charles Scribner's Sons",
+  "year_published": 1925,
+  "copies_available": 5
 }
 ```
 
-### 2. **Read** (List All Books)
+### 2. Read (List All Books)
+**Request**  
+`GET /books`  
 
-#### Request
+**Response**  
+`200 OK`  
 ```json
-GET /books
+[
+  {
+    "id": "6769be7156ca61f944fa3f90",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "1234567890123",
+    "publisher": "Charles Scribner's Sons",
+    "year_published": 1925,
+    "copies_available": 5
+  }
+]
 ```
 
-#### Response
+### 3. Update (Update Book Information)
+**Request**  
+`PUT /books/6769be7156ca61f944fa3f90`  
+
+**Request Body**  
 ```json
 {
-  "status": "success",
-  "data": [
-    {
-      "id": "6769be7156ca61f944fa3f90",
-      "title": "The Great Gatsby",
-      "author": "F. Scott Fitzgerald",
-      "isbn": "1234567890123",
-      "publisher": "Charles Scribner's Sons",
-      "year_published": 1925,
-      "copies_available": 5
-    }
-  ],
-  "total_books": 1
+  "copies_available": 8
 }
 ```
 
-### 3. **Update** (Update Book Information)
-
-#### Request
+**Response**  
+`200 OK`  
 ```json
-PUT /books/6769be7156ca61f944fa3f90
 {
-  "new_copies_available": 8
+  "id": "6769be7156ca61f944fa3f90",
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "isbn": "1234567890123",
+  "publisher": "Charles Scribner's Sons",
+  "year_published": 1925,
+  "copies_available": 8
 }
 ```
 
-#### Response
-```json
-{
-  "status": "success",
-  "message": "Book updated successfully"
-}
-```
+### 4. Delete (Delete a Book)
+**Request**  
+`DELETE /books/6769be7156ca61f944fa3f90`  
 
-### 4. **Delete** (Delete a Book)
+**Response**  
+`204 No Content`  
 
-#### Request
-```json
-DELETE /books/6769be7156ca61f944fa3f90
-```
-
-#### Response
-```json
-{
-  "status": "success",
-  "message": "Book deleted successfully"
-}
-```
+---
 
 ## Users API (CRUD Operations)
 
-### 1. **Create** (Register a New User)
+### 1. Create (Register a New User)
+**Request**  
+`POST /users`  
 
-#### Request
+**Request Body**  
 ```json
-POST /users
 {
   "username": "john_doe",
   "email": "john@example.com",
@@ -106,214 +103,195 @@ POST /users
 }
 ```
 
-#### Response
+**Response**  
+`201 Created`  
 ```json
 {
-  "status": "success",
-  "message": "User registered successfully",
-  "id": "6769be7156ca61f944fa3f90"
+  "id": "6769be7156ca61f944fa3f90",
+  "username": "john_doe",
+  "email": "john@example.com",
+  "full_name": "John Doe"
 }
 ```
 
-### 2. **Read** (Get User Details)
+### 2. Read (Get User Details)
+**Request**  
+`GET /users/6769be7156ca61f944fa3f90`  
 
-#### Request
-```json
-GET /users/6769be7156ca61f944fa3f90
-```
-
-#### Response
+**Response**  
+`200 OK`  
 ```json
 {
-  "status": "success",
-  "data": {
-    "id": "6769be7156ca61f944fa3f90",
-    "username": "john_doe",
-    "email": "john@example.com",
-    "full_name": "John Doe"
-  }
+  "id": "6769be7156ca61f944fa3f90",
+  "username": "john_doe",
+  "email": "john@example.com",
+  "full_name": "John Doe"
 }
 ```
 
-### 3. **Update** (Update User Information)
+### 3. Update (Update User Information)
+**Request**  
+`PUT /users/6769be7156ca61f944fa3f90`  
 
-#### Request
+**Request Body**  
 ```json
-PUT /users/6769be7156ca61f944fa3f90
 {
-  "new_email": "new_john@example.com"
+  "email": "new_john@example.com"
 }
 ```
 
-#### Response
+**Response**  
+`200 OK`  
 ```json
 {
-  "status": "success",
-  "message": "User updated successfully"
+  "id": "6769be7156ca61f944fa3f90",
+  "username": "john_doe",
+  "email": "new_john@example.com",
+  "full_name": "John Doe"
 }
 ```
 
-### 4. **Delete** (Delete a User)
+### 4. Delete (Delete a User)
+**Request**  
+`DELETE /users/6769be7156ca61f944fa3f90`  
 
-#### Request
-```json
-DELETE /users/6769be7156ca61f944fa3f90
-```
+**Response**  
+`204 No Content`  
 
-#### Response
-```json
-{
-  "status": "success",
-  "message": "User deleted successfully"
-}
-```
+---
 
 ## Reviews API (CRUD Operations)
 
-### 1. **Create** (Add a Review for a Book)
+### 1. Create (Add a Review for a Book)
+**Request**  
+`POST /books/6769be7156ca61f944fa3f90/reviews`  
 
-#### Request
+**Request Body**  
 ```json
-POST /books/6769be7156ca61f944fa3f90/reviews
 {
   "content": "A captivating story with deep symbolism.",
   "rating": 5
 }
 ```
 
-#### Response
+**Response**  
+`201 Created`  
 ```json
 {
-  "status": "success",
-  "message": "Review added successfully",
-  "id": "6769be7156ca61f944fa3f90"
+  "id": "9876fd7156ca61f944fa3f91",
+  "book_id": "6769be7156ca61f944fa3f90",
+  "content": "A captivating story with deep symbolism.",
+  "rating": 5
 }
 ```
 
-### 2. **Read** (List All Reviews for a Book)
+### 2. Read (List All Reviews for a Book)
+**Request**  
+`GET /books/6769be7156ca61f944fa3f90/reviews`  
 
-#### Request
+**Response**  
+`200 OK`  
 ```json
-GET /books/6769be7156ca61f944fa3f90/reviews
+[
+  {
+    "id": "9876fd7156ca61f944fa3f91",
+    "book_id": "6769be7156ca61f944fa3f90",
+    "content": "A captivating story with deep symbolism.",
+    "rating": 5
+  }
+]
 ```
 
-#### Response
+### 3. Update (Update Review)
+**Request**  
+`PUT /books/6769be7156ca61f944fa3f90/reviews/9876fd7156ca61f944fa3f91`  
+
+**Response**  
+`200 OK`  
 ```json
 {
-  "status": "success",
-  "data": [
-    {
-      "id": "6769be7156ca61f944fa3f90",
-      "content": "A captivating story with deep symbolism.",
-      "rating": 5
-    }
-  ]
+  "id": "9876fd7156ca61f944fa3f91",
+  "book_id": "6769be7156ca61f944fa3f90",
+  "content": "An exceptional novel with rich storytelling.",
+  "rating": 5
 }
 ```
 
-### 3. **Update** (Update Review)
+### 4. Delete (Delete a Review)
+**Request**  
+`DELETE /books/6769be7156ca61f944fa3f90/reviews/9876fd7156ca61f944fa3f91`  
 
-#### Request
-```json
-PUT /books/6769be7156ca61f944fa3f90/reviews/6769be7156ca61f944fa3f90
-{
-  "content": "An exceptional novel with rich storytelling."
-}
-```
+**Response**  
+`204 No Content`
 
-#### Response
-```json
-{
-  "status": "success",
-  "message": "Review updated successfully"
-}
-```
-
-### 4. **Delete** (Delete a Review)
-
-#### Request
-```json
-DELETE /books/6769be7156ca61f944fa3f90/reviews/6769be7156ca61f944fa3f90
-```
-
-#### Response
-```json
-{
-  "status": "success",
-  "message": "Review deleted successfully"
-}
-```
 
 ## Categories API (CRUD Operations)
 
-### 1. **Create** (Add a New Category)
+### 1. Create (Add a New Category)
+**Request**  
+`POST /categories`  
 
-#### Request
+**Request Body**  
 ```json
-POST /categories
 {
   "name": "Fiction"
 }
 ```
 
-#### Response
+**Response**  
+`201 Created`  
 ```json
 {
-  "status": "success",
-  "message": "Category created successfully",
-  "id": "6769be7156ca61f944fa3f90"
+  "id": "6769be7156ca61f944fa3f90",
+  "name": "Fiction"
 }
 ```
 
-### 2. **Read** (List All Categories)
+---
 
-#### Request
+### 2. Read (List All Categories)
+**Request**  
+`GET /categories`  
+
+**Response**  
+`200 OK`  
 ```json
-GET /categories
+[
+  {
+    "id": "6769be7156ca61f944fa3f90",
+    "name": "Fiction"
+  }
+]
 ```
 
-#### Response
-```json
-{
-  "status": "success",
-  "data": [
-    {
-      "id": "6769be7156ca61f944fa3f90",
-      "name": "Fiction"
-    }
-  ]
-}
-```
+---
 
-### 3. **Update** (Update Category)
+### 3. Update (Update Category)
+**Request**  
+`PUT /categories/6769be7156ca61f944fa3f90`  
 
-#### Request
+**Request Body**  
 ```json
-PUT /categories/6769be7156ca61f944fa3f90
 {
   "name": "Historical Fiction"
 }
 ```
 
-#### Response
+**Response**  
+`200 OK`  
 ```json
 {
-  "status": "success",
-  "message": "Category updated successfully"
+  "id": "6769be7156ca61f944fa3f90",
+  "name": "Historical Fiction"
 }
 ```
 
-### 4. **Delete** (Delete a Category)
+---
 
-#### Request
-```json
-DELETE /categories/6769be7156ca61f944fa3f90
-```
+### 4. Delete (Delete a Category)
+**Request**  
+`DELETE /categories/6769be7156ca61f944fa3f90`  
 
-#### Response
-```json
-{
-  "status": "success",
-  "message": "Category deleted successfully"
-}
-```
+**Response**  
+`204 No Content`  
+
