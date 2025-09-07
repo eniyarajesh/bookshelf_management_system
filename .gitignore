@@ -55,6 +55,12 @@ env/
 # VS Code
 .vscode/
 
+
+# =====================
+# .env files
+# =====================
+.env
+
 # History / Backup
 .history/
 *.swp
