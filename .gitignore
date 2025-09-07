@@ -55,17 +55,14 @@ env/
 # VS Code
 .vscode/
 
-
-# =====================
-# .env files
-# =====================
-.env
-
 # History / Backup
 .history/
 *.swp
 *.swo
 *~
+
+# .env files
+.env
 
 # =====================
 # OS generated files
