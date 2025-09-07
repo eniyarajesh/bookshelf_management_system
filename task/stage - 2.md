@@ -12,7 +12,6 @@
       "id": "6683e1a4710824df4e5d76e9",
       "name": "James"
     },
-    "is_published": false,
     "category": {
       "id": "6769be7156ca61f944fa3f90",
       "name": "Fiction"

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from pydantic import ValidationError
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from typing import List
 import logging
@@ -33,6 +34,15 @@ async def create_book(request: Request, book: BookCreate, service: BookService =
     logger.info(f"Request path: {request.url.path}")
     try:
         return await service.create_book(book)
+    except ValidationError as e:
+        for error in e.errors():
+            if error["loc"][-1] == "isbn":
+                logger.error("Validation error: ISBN must be exactly 13 digits.")
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="ISBN must be exactly 13 digits."
+                )
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation failed.")
     except HTTPException as e:
         logger.error(f"HTTPException: {e.detail}")
         raise e

@@ -1,9 +1,69 @@
-.idea
-.vscode
+# =====================
+# Python
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# =====================
+# Virtual Environment
+# =====================
+venv/
+ENV/
+env/
+.venv/
+
+# =====================
+# IDE / Editor
+# =====================
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# History / Backup
 .history/
-app/__pycache__/
-app/models/__pycache__/
-app/routes/__pycache__/
-app/schemas/__pycache__/
-app/services/__pycache__/
-app/test.py
+*.swp
+*.swo
+*~
+
+# =====================
+# OS generated files
+# =====================
+.DS_Store
+Thumbs.db
+desktop.ini

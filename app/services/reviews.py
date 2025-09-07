@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 from app.services import BaseService
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.models.reviews import Review
-from app.schemas.reviews import ReviewResponse, WriteReview, UpdatReview
+from app.schemas.reviews import ReviewResponse, CreateReview,UpdateReview
 from typing import List
 
 
@@ -14,10 +14,16 @@ class ReviewService(BaseService):
         super().__init__(db)
         self.collection = db['reviews']
     
-    async def write_review(self,user_review:WriteReview):
-        review = Review(**user_review.dict())
-        result = await self.collection.insert_one(review.dict())
-        review = await self.collection.find_one({'_id':result.inserted_id})
+    async def create_review(self, book_id: str, user_review: CreateReview):
+        book_exists = await self.db['books'].find_one({"_id": book_id})
+        if not book_exists:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+        review = user_review.dict()
+        string_id = str(ObjectId())
+        review['_id'] = string_id
+        review['book_id'] = book_id
+        await self.collection.insert_one(review)
+        review = await self.collection.find_one({'_id':string_id})
         return self._to_response(review,ReviewResponse)
     
     async def get_reviews(self, book_id: str):
@@ -29,24 +35,44 @@ class ReviewService(BaseService):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No reviews for the selected book.")
         return [self._to_response(review, ReviewResponse) for review in reviews]
     
-    async def update_review(self,review_id:str,update_review:UpdatReview):
+    async def update_review(self,book_id:str,review_id:str,update_review:UpdateReview):
         try:
-            review = await self.collection.update_one({'_id':ObjectId(review_id)},
-                                                      {"$set":update_review.dict(exclude_unset = True)})
+            book_exists = await self.db['books'].find_one({"_id": book_id})
+            if not book_exists:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+            
+            review_exists = await self.collection.find_one({"_id": review_id, "book_id": book_id})
+            if not review_exists:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found for the specified book")
         
-        except InvalidId:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid ObjectId")
-        
-        if review.matched_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found")
-        
-        review_ = await self.collection.find_one({'_id': ObjectId(review_id)})
 
-        return self._to_response(review_,ReviewResponse)
-    
+            update_fields = {}
+            if update_review.content is not None:
+                update_fields['content'] = update_review.content
+            if update_review.rating is not None:
+                update_fields['rating'] = update_review.rating
+            if not update_fields:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No valid fields to update")
+
+            # Step 5: Perform the update
+            result = await self.collection.update_one(
+                {"_id": review_id, "book_id": book_id},
+                {"$set": update_fields}
+            )
+
+            if result.modified_count == 0:
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update review")
+
+            # Step 5: Return updated review
+            updated_review = await self.collection.find_one({"_id": review_id})
+            return self._to_response(updated_review, ReviewResponse)
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+        
     async def delete_review(self, review_id: str):
         try:
-            result = await self.collection.delete_one({'_id': ObjectId(review_id)})
+            result = await self.collection.delete_one({'_id': str(ObjectId(review_id))})
             if result.deleted_count == 0:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
             else:
@@ -54,10 +80,9 @@ class ReviewService(BaseService):
         except InvalidId:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid UserID")
         
-    
-
-    
-
+    async def get_review(self):
+        reviews = await self.collection.find().to_list(None)
+        return [self._to_response(review, ReviewResponse) for review in reviews]
         
     
 

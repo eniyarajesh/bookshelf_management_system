@@ -34,6 +34,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### 4. DB Config
+Make Mongo DB config:
+```bash
+# Mongo DB Config
+	MONGO_URL = "mongodb://localhost:27017"
+```
+
 ### 4. Run FastAPI Application
 ```bash
 # Run the FastAPI app using Uvicorn
@@ -125,3 +132,4 @@ Handles all operations related to books.
 - Refer to `/docs` for endpoint verification during development.
 - Use the virtual environment to avoid dependency conflicts.
 - Commit changes frequently and document API endpoints clearly.
+

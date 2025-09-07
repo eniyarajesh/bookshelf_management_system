@@ -8,4 +8,4 @@ async def get_database():
     db = client['<DB_Collection_name>']
     yield db
     client.close()
-
+    

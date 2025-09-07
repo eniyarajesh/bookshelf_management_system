@@ -8,20 +8,21 @@ from app.services import BaseService
 
 
 class UserService(BaseService):
-    
     def __init__(self, db:AsyncIOMotorDatabase):
         super().__init__(db)
         self.collection = db['users']
     
     async def create_user(self, user_data:CreateUser):
-        user = User(**user_data.dict())
-        result = await self.collection.insert_one(user.dict())
-        user = await self.collection.find_one({'_id':result.inserted_id})
+        user = user_data.dict()
+        string_id = str(ObjectId())
+        user['_id'] = string_id
+        await self.collection.insert_one(user)
+        user = await self.collection.find_one({'_id':string_id})
         return self._to_response(user,UserDetails)
     
     async def get_user(self, user_id: str):
         try:
-            user = await self.collection.find_one({'_id': ObjectId(user_id)})
+            user = await self.collection.find_one({'_id': str(ObjectId(user_id))})
         except InvalidId:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid ObjectId")
         if not user:
@@ -30,18 +31,18 @@ class UserService(BaseService):
     
     async def update_user(self, user_id: str, update_data: UpdateUser):
         try:
-            result = await self.collection.update_one({'_id': ObjectId(user_id)},
+            result = await self.collection.update_one({'_id': str(ObjectId(user_id))},
                                                       {'$set': update_data.dict(exclude_unset=True)})
         except InvalidId:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid ObjectId")
         if result.matched_count == 0:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-        user = await self.collection.find_one({'_id': ObjectId(user_id)})
+        user = await self.collection.find_one({'_id': str(ObjectId(user_id))})
         return self._to_response(user, UserDetails)
     
     async def delete_user(self, user_id: str):
         try:
-            result = await self.collection.delete_one({'_id': ObjectId(user_id)})
+            result = await self.collection.delete_one({'_id': str(ObjectId(user_id))})
             if result.deleted_count == 0:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
         except InvalidId:
